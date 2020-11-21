@@ -12,7 +12,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A simple Create-Read-Delete application using react(hooks), googleAuth, nodeJs, expressJs and mysql.
+A simple Create-Read-Delete application using react(hooks), googleAuth, nodeJs, expressJs and mysql.<br>
+User needs to be Logged in first to add any tasks.<br>
 User can Add, Read and Delete its tasks.<br>
 There is one table in the db namely tasks that keeps the record of the task, taskid and userid in this application. <br>
 Details about the user abstracted from its google account are name and its id associated with google account is used.<br>

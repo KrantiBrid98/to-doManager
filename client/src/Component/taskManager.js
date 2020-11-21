@@ -1,71 +1,96 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import TaskList from './taskList'
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import { TaskCard } from './TaskCards';
 
-class TaskManager extends React.Component {
-    state = {
-        task: '',
-        taskList: []
-    }
+const TaskManager = (props) => {
+  const [task, setTask] = useState('');
+  const [taskList, setTaskList] = useState([]);
 
-    componentDidMount() {
-        this.getTaskList()
-    }
+  useEffect(() => {
+    getTaskList();
+  }, [props]);
 
-    onSubmitClick = () => {
-        fetch(`http://localhost:4000/addtask?tasks='${this.state.task}'`)
-        this.getTaskList()
-        this.setState({task: ''})
-    }
+  const onChange = (e) => setTask(e.target.value);
 
-    getTaskList = () => {
-        fetch('http://localhost:4000/tasks')
-            .then(respose => respose.json())
-            .then(respose => this.setState({ taskList: respose }))
-    }
+  const onDoneClick = () => console.log(`good for you`);
 
-    onEditClick = (e) => {
-        console.log('edit clicked')
-    }
+  const showSignInError = () => (
+    <div class="ui red message">You need to sign in first !</div>
+  );
 
-    onDeleteClick = (taskid) => {
-        fetch(`http://localhost:4000/task/${taskid}`, {
-            method: 'DELETE',
-        })
-        this.getTaskList()
-    }
+  const onSubmitClick = () => {
+    const { userId } = props;
+    axios
+      .post(`http://localhost:4000/addtask`, {
+        task,
+        userId,
+      })
+      .then(() => {
+        getTaskList();
+        setTask('');
+      });
+  };
 
-    render() {
-        console.log(this.state.taskList)
-        return (
-            <div>
-                <h4>Add your task for today</h4>
-                <div className="ui input">
-                    <input type='text' value={this.state.task} onChange={e => this.setState({ task: e.target.value })} placeholder='your task...'></input>
-                </div>
-                <button className="ui primary basic button" onClick={() => this.onSubmitClick()}>Submit</button>
-                <hr />
-                <h4>Task list</h4>
-                <div className="ui cards">
-                    {
-                        this.state.taskList.map(task => <div className="card" >
-                            <div className="content">
-                                <div className="description">
-                                    {task.tasks}
-                                </div>
-                            </div>
-                            <div className="extra content">
-                                <div className="ui two buttons">
-                                    <div className="ui basic green button" onClick={e => this.ondoneClick()}>Done</div>
-                                    <div className="ui basic red button" onClick={() => this.onDeleteClick(task.taskid)}>Delete</div>
-                                </div>
-                            </div>
-                        </div>
-                        )
-                    }
-                </div>
-            </div>
-        )
-    }
-}
+  const getTaskList = () => {
+    axios
+      .get(`http://localhost:4000/tasks/${props.userId}`)
+      .then((respose) => respose.data)
+      .then((respose) => setTaskList(respose));
+  };
 
-export default TaskManager
+  const onDeleteClick = (taskid) => {
+    axios
+      .delete(`http://localhost:4000/task/${taskid}`, {
+        method: 'DELETE',
+      })
+      .then(() => getTaskList()); // fetching the updated list
+  };
+
+  const { isSignedIn, userName } = props;
+
+  return !isSignedIn ? (
+    showSignInError()
+  ) : (
+    <div>
+      <h3 style={{ padding: `20px` }}>
+        Hello 
+        <span style={{ color: `#6185d3` }}> {userName}</span>! Add your task for
+        today
+      </h3>
+      <div className="ui input">
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => onChange(e)}
+          placeholder="your task..."
+        ></input>
+      </div>
+      <button
+        className="ui primary basic button"
+        onClick={() => onSubmitClick()}
+      >
+        Submit
+      </button>
+      <TaskCard
+        onChange={onChange}
+        onDeleteClick={onDeleteClick}
+        onSubmitClick={onSubmitClick}
+        taskList={taskList}
+        task={task}
+        onDoneClick={onDoneClick}
+        onDeleteClick={onDeleteClick}
+      />
+    </div>
+  );
+};
+
+const mapStateToProps = ({ auth }) => {
+  return {
+    isSignedIn: auth.isSignedIn,
+    userId: auth.userId,
+    userName: auth.userName,
+  };
+};
+
+export default connect(mapStateToProps)(TaskManager);

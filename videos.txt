@@ -1,4 +1,0 @@
-to-do manager react front end
-setting up the server (npm i express cors mysql2 nodemon)
-creating tables in Mysql and writing queries
-fetch

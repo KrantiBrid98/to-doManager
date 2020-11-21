@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { TaskCard } from './TaskCards';
 
-const TaskManager = (props) => {
+const TaskManager = props => {
   const [task, setTask] = useState('');
   const [taskList, setTaskList] = useState([]);
 
@@ -11,13 +11,11 @@ const TaskManager = (props) => {
     getTaskList();
   }, [props]);
 
-  const onChange = (e) => setTask(e.target.value);
+  const onChange = e => setTask(e.target.value);
 
   const onDoneClick = () => console.log(`good for you`);
 
-  const showSignInError = () => (
-    <div class="ui red message">You need to sign in first !</div>
-  );
+  const showSignInError = () => <div class="ui red message">You need to sign in first !</div>
 
   const onSubmitClick = () => {
     const { userId } = props;
@@ -39,7 +37,7 @@ const TaskManager = (props) => {
       .then((respose) => setTaskList(respose));
   };
 
-  const onDeleteClick = (taskid) => {
+  const onDeleteClick = taskid => {
     axios
       .delete(`http://localhost:4000/task/${taskid}`, {
         method: 'DELETE',

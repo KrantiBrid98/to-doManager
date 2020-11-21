@@ -6,7 +6,7 @@ export const TaskCard = ({taskList, onDoneClick, onDeleteClick}) => {
       <hr />
       <h4>Here are you Tasks for today</h4>
       <div className="ui cards">
-        {taskList.map((task) => (
+        {taskList.map(task => (
           <div className="card">
             <div className="content">
               <div className="description">{task.task}</div>

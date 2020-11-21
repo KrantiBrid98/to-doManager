@@ -22,7 +22,7 @@ Every task is associated by the user who created it and can be fetched when the 
 <!-- BUILT WITH -->
 ### Built With
 
-ExpressJS is a framework for building efficient, scalable Node.js server-side applications. <br>This application uses express as its base.<br>
+ExpressJS is a framework for building efficient, scalable Node.js server-side applications. <br>This application uses expres.<br>
 Data and information has been stored using mySql.<br>
 React, Redux and hooks are used for frontend.<br>
 
@@ -37,7 +37,7 @@ $ cd client
 $ npm start
 # backend watch mode
 $ cd server
-# npm start
+$ npm start
 
 ```
 <!-- List of endpoints -->
